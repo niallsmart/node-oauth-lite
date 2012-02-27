@@ -1,0 +1,17 @@
+
+* Implement http.request*
+* Add test for making an authorization header with Realm (TODO: read about Realm)
+* Add RSA-SHA1 signature support
+* Implement test cases on OAuth.net wiki http://wiki.oauth.net/w/page/12238556/TestCases
+* Real world testing against (http://wiki.oauth.net/w/page/12238551/ServiceProviders)
+ - Twitter
+ - Meetup
+ - Dwolla
+ - Facebook
+ - StackOverflow
+ - Google
+ - Vimeo
+ - NetFlix
+ - Yahoo
+ - FlickR
+ - Yammer
