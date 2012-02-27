@@ -3,7 +3,7 @@
 	[
 		{
 			"path": "/Users/niall/Dropbox/Projects/node-oauth-lite",
-			"folder_exclude_patterns": ["node_modules", "src"]
+			"folder_exclude_patterns": ["node_modules", "lib"]
 		}
 	],
     "build_systems":

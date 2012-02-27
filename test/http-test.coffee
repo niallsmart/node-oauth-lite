@@ -58,10 +58,6 @@ exports.testFetchRequestTokenGoogle = (test) ->
     test.done()
 
 
-#exports.testFetchAccessToken = (test) ->
-#  dummy = https
-
-
 exports.testFetchRequestTokenRequiredParameters = (test) ->
 
   state = 
