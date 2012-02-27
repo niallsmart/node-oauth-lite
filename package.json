@@ -36,6 +36,6 @@
         "url": "git://github.com/niallsmart/node-oauth-lite.git"
     },
     "scripts": {
-        "test": "echo $PATH; cake test"
+        "test": "cake test"
     }
 }
