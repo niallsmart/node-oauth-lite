@@ -2,17 +2,15 @@
     "version": "0.1.0",
     "description": "Lightweight OAuth 1.0a client",
     "name": "oauth-lite",
-    "main": "lib/main.js",
+    "main": "lib/http.js",
 
     "author": {
         "email": "niall@pobox.com",
         "name": "Niall Smart",
         "url": "http://niallsmart.com"
     },
-    "dependencies": {
-        "coffee-script": ">=1.2.0"
-    },
     "devDependencies": {
+        "coffee-script": ">=1.2.0",
         "nodeunit": ">=0.7.3"
     },
     "directories": {
@@ -24,7 +22,10 @@
         "node": ">=0.6.0"
     },
     "files": [
-        "lib"
+	"Cakefile",
+        "src",
+        "lib",
+        "test"
     ],
     "keywords": [
         "oauth",
