@@ -9,5 +9,4 @@ task 'compile', 'compile CoffeeScript sources', () ->
 
 task 'test', () ->
 	exec 'nodeunit --reporter eclipse test/*-test.*', (err, stdout, stderr) ->
-	    throw err if err
 	    console.log stdout + stderr
