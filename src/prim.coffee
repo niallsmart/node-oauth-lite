@@ -85,7 +85,7 @@ prim.makeTimestamp = ->
 
 prim.signHmac = (clientSecret, tokenSecret, oauth, request, form) ->
   key = [prim.encode(clientSecret), prim.encode(tokenSecret || "")].join("&")
-  sbs = prim.makeSignatureBaseString(oauth, request, form) #unless typeof(request) == 'string'
+  sbs = prim.makeSignatureBaseString(oauth, request, form)
   hmac = crypto.createHmac("sha1", key)
   hmac.update(sbs)
   hmac.digest("base64")

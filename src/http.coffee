@@ -19,9 +19,11 @@ fetchToken = (state, options, form, cb) ->
   if typeof(options) == 'string'
     options = urllib.parse(options, true)
   
-  options.method = "POST" unless options.method?
-  options.headers = {} unless options.headers?
-  options.headers["Authorization"] = oauth.makeAuthorizationHeader state, options, form
+  options.method ?= "POST"
+  options.headers ?= {}
+  options.headers["Authorization"] = oauth.makeAuthorizationHeader state, options, form, options.realm
+
+
 
   if options.protocol != 'https:'
     throw new Error("OAuthconnection requires https; #{options.protocol.slice(0, -1)} was specified") 
@@ -52,7 +54,7 @@ fetchToken = (state, options, form, cb) ->
     res.on 'end', () ->
       params = qslib.parse(buf)
       cb(null, params)
-      
+
   req.on 'error', (e) ->
     cb(e)
 
@@ -72,9 +74,9 @@ fetchToken = (state, options, form, cb) ->
 # 
 oauth.fetchRequestToken = (state, options, form, cb) ->
 
-  if (typeof(body) == 'function')
-    cb = body
-    body = null
+  if (typeof(form) == 'function')
+    cb = form
+    form = null
 
   required = ["oauth_consumer_key", "oauth_consumer_secret"]
 
@@ -112,9 +114,9 @@ oauth.fetchRequestToken = (state, options, form, cb) ->
 # 
 oauth.fetchAccessToken = (state, options, form, cb) ->
 
-  if (typeof(body) == 'function')
-    cb = body
-    body = null
+  if (typeof(form) == 'function')
+    cb = form
+    form = null
 
   required = ["oauth_consumer_key", "oauth_consumer_secret", "oauth_token", "oauth_token_secret", "oauth_verifier"]
 

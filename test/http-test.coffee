@@ -1,6 +1,10 @@
 oauth = require('../src/http')
+prim = require('../src/prim')
 urllib = require('url')
+fslib = require('fs');
+qslib = require('querystring');
 assert = require('nodeunit/lib/assert')
+https = require('https');
 
 exports.testMakeAuthorizationHeader = (test) ->
   state =
@@ -91,3 +95,102 @@ exports.testFetchRequestTokenRequiredParameters = (test) ->
     test.equal e.message, "state.oauth_consumer_secret is required"
 
   test.done()
+
+
+exports.testWithMockServer = (test) ->
+
+  # mock OAuth server setup
+  mock =
+    keys:
+      key: fslib.readFileSync('./test/server-key.pem'),
+      cert: fslib.readFileSync('./test/server-cert.pem')
+    port: 8111
+    request:
+      url:
+        "/oauth/request?log=true"
+      form:
+        animal: "cat"
+      response:
+        oauth_token: "foo"
+        oauth_token_secret: "bar"
+        oauth_callback_confirmed: "true"
+    access:
+      url:
+        "/oauth/access?log=true"
+      form:
+        animal: "dog"
+      response:
+        oauth_token: "baz"
+        oauth_token_secret: "qux"
+      oauth_token: "baz"
+      oauth_token_secret: "qux"
+
+  # mock OAuth server
+  server = https.createServer mock.keys, (req, res) ->
+
+    test.equal req.method, options.method
+    test.equal req.headers["content-type"], "application/x-www-form-urlencoded"
+    test.equal req.headers["authorization"], authorization
+
+    switch req.url
+      when mock.request.url
+        xchg = mock.request
+      when mock.access.url
+        xchg = mock.access
+      else
+        test.ok false, "unexpected URL: #{req.url}"
+
+    req.setEncoding 'utf8'
+    req.on 'data', (buf) ->
+      test.equals req.headers["content-length"], buf.length
+      test.equals buf, qslib.encode(xchg.form)
+      form = qslib.encode(xchg.response)
+      res.setHeader("Content-Length", form.length)
+      res.setHeader("Content-Type", "application/x-www-form-urlencoded")
+      res.writeHead(200)
+      res.end(form)
+
+  state = 
+    oauth_consumer_key: "QAFNTS138L"
+    oauth_consumer_secret: "TOMII7Q9E6"
+    oauth_callback: "http://client.com/oauth/callback"
+    oauth_nonce: prim.makeNonce()
+    oauth_timestamp: prim.makeTimestamp()
+
+  options = urllib.parse("https://localhost:#{mock.port}#{mock.request.url}", true)
+  options.method = "POST"
+  options.realm = "Test"
+
+  test.expect 15
+
+  authorization = oauth.makeAuthorizationHeader state, options, mock.request.form, "Test"
+
+  server.listen mock.port, 'localhost', () ->
+
+    oauth.fetchRequestToken state, options, mock.request.form, (err, params) ->
+
+      test.equal err, null
+      test.deepEqual params, mock.request.response
+
+      state.oauth_token = params.oauth_token
+      state.oauth_token_secret = params.oauth_token_secret 
+      state.oauth_verifier = "7C62GLI1TK"
+
+      options = urllib.parse("https://localhost:#{mock.port}#{mock.access.url}", true)
+      options.method = "POST"
+      options.realm = "Test"
+
+      authorization = oauth.makeAuthorizationHeader state, options, mock.access.form, "Test"
+
+      oauth.fetchAccessToken state, options, mock.access.form, (err, params) ->
+        test.equal err, null
+        test.equal params.oauth_token, mock.access.response.oauth_token
+        test.equal params.oauth_token_secret, mock.access.response.oauth_token_secret
+        server.close()
+        test.done()
+
+
+
+
+
+

@@ -1,8 +1,11 @@
 
 * Documentation
-* Add unit test for fetchAccessToken
-* Add RSA-SHA1 signature support
-* Implement test cases on OAuth.net wiki http://wiki.oauth.net/w/page/12238556/TestCases
+* Test coverage:
+ - Non-HTTP 200 response codes
+ - Invalid/incorrect server responses (e.g., missing parameters)
+ - Implement test cases on OAuth.net wiki http://wiki.oauth.net/w/page/12238556/TestCases
+* Features
+ - Add RSA-SHA1 signature support
 * Real world testing against (http://wiki.oauth.net/w/page/12238551/ServiceProviders)
  - Twitter
  - Meetup
