@@ -14,8 +14,20 @@ exports.testMakeAuthorizationHeader = (test) ->
   options.method = "POST"
 
   header = oauth.makeAuthorizationHeader state, options
+  test.equal header, 'OAuth oauth_consumer_key="0b2eb1469",oauth_callback="oob",oauth_nonce="d1fdf5bd8d4",' +
+                      'oauth_timestamp="1329806281",oauth_version="1.0",oauth_signature_method="HMAC-SHA1",' +
+                      'oauth_signature="16Wu6JCHalUvrIgD31sOX7M%2F%2F60%3D"'
 
-  test.equal header, 'OAuth oauth_consumer_key="0b2eb1469",oauth_callback="oob",oauth_nonce="d1fdf5bd8d4",oauth_timestamp="1329806281",oauth_version="1.0",oauth_signature_method="HMAC-SHA1",oauth_signature="16Wu6JCHalUvrIgD31sOX7M%2F%2F60%3D"'
+  header = oauth.makeAuthorizationHeader state, options, null, 'Admin "A"!'
+  test.equals header, 'OAuth realm="Admin \\"A\\"!",oauth_consumer_key="0b2eb1469",oauth_callback="oob",oauth_nonce="d1fdf5bd8d4",' +
+                      'oauth_timestamp="1329806281",oauth_version="1.0",oauth_signature_method="HMAC-SHA1",' +
+                      'oauth_signature="16Wu6JCHalUvrIgD31sOX7M%2F%2F60%3D"'
+
+  header = oauth.makeAuthorizationHeader state, options, null, ''
+  test.equal header, 'OAuth realm="",oauth_consumer_key="0b2eb1469",oauth_callback="oob",oauth_nonce="d1fdf5bd8d4",' +
+                      'oauth_timestamp="1329806281",oauth_version="1.0",oauth_signature_method="HMAC-SHA1",' +
+                      'oauth_signature="16Wu6JCHalUvrIgD31sOX7M%2F%2F60%3D"'
+
   test.done()
 
 

@@ -153,12 +153,12 @@ oauth.makeAuthorizationHeader = (state, options, form, realm) ->
   params = prim.makeOAuthParameters(state, options, form)
   header = "OAuth "
 
-  if realm?
-    realm = realm.replace /"/, "\\\""
-    header += eql "realm", quote(realm)
-
   params = for own k, v of params
     eql(prim.encode(k), quote(prim.encode(v)))
+
+  if realm?
+    realm = realm.replace /"/g, "\\\""
+    params.splice(0, 0, eql("realm", quote(realm)))
 
   header += params.join(",")
   header
