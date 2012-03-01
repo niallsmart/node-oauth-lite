@@ -5,9 +5,10 @@
 events = require('events');
 urllib = require('url')
 qslib = require('querystring')
-https = require('https')
 prim = require('./prim')
 oauth = exports
+
+exports.requireTLS = true
 
 clone = (obj) ->
   ret = {}
@@ -23,10 +24,15 @@ fetchToken = (state, options, form, cb) ->
   options.headers ?= {}
   options.headers["Authorization"] = oauth.makeAuthorizationHeader state, options, form, options.realm
 
+  protocols = {
+    "https:":  require('https')
+  }
 
+  if !exports.requireTLS
+    protocols["http:"] = require('http')
 
-  if options.protocol != 'https:'
-    throw new Error("OAuthconnection requires https; #{options.protocol.slice(0, -1)} was specified") 
+  if !(protocol = protocols[options.protocol])
+    throw new Error("protocol not supported: '#{options.protocol.slice(0, -1)}' (try https, or set requireTLS=false)") 
 
   if form?
     form = qslib.stringify(form) if typeof(form) == 'object'
@@ -35,7 +41,7 @@ fetchToken = (state, options, form, cb) ->
   else
     options.headers["Content-Length"] = 0
 
-  req = https.request options, (res) ->
+  req = protocol.request options, (res) ->
 
     if (res.statusCode != 200) 
       cb(new Error("server responded with HTTP #{res.statusCode}"))
@@ -145,6 +151,11 @@ oauth.fetchAccessToken = (state, options, form, cb) ->
 
 
 oauth.makeAuthorizationHeader = (state, options, form, realm) ->
+
+  # TODO: sanity check options argument (method, hostname,
+  #       and protocol are required) and state argument
+  #       (oauth_consumer_key and oauth_consumer_secret are
+  #       required)
 
   eql = (k, v) ->
     "#{k}=#{v}"

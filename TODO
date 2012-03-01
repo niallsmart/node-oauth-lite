@@ -1,5 +1,6 @@
 
 * Documentation
+* Add trace option to debug HTTP traffic
 * Test coverage:
  - Non-HTTP 200 response codes
  - Invalid/incorrect server responses (e.g., missing parameters)

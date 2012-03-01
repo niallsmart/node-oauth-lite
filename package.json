@@ -11,7 +11,8 @@
     },
     "devDependencies": {
         "coffee-script": ">=1.2.0",
-        "nodeunit": ">=0.7.3"
+        "nodeunit": ">=0.7.3",
+        "request": ">=2.9.152"
     },
     "directories": {
         "example": "example",
