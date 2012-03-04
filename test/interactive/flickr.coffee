@@ -1,7 +1,4 @@
 interactive = require('./interactive')
-oauth = require('../../src/http')
-urllib = require('url')
-request = require('request')
 
 endpoints =
 	request: "https://secure.flickr.com/services/oauth/request_token"

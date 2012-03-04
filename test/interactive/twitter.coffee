@@ -1,6 +1,4 @@
 interactive = require('./interactive')
-oauth = require('../../src/http')
-urllib = require('url')
 
 endpoints =
 	request: "https://api.twitter.com/oauth/request_token"
