@@ -1,9 +1,11 @@
 oauth = require("../../src/http")
 urllib = require('url')
+request = require('request')
 
 exports.InteractiveTest = class
 
 	constructor: (@endpoints, @state, @form) ->
+		null
 
 	onSuccess: (params) ->
 		console.log("authenticated:", params)
@@ -12,6 +14,24 @@ exports.InteractiveTest = class
 		url = urllib.parse(@endpoints.authorize, true)
 		url.query.oauth_token = params.oauth_token
 		urllib.format(url)
+
+
+	fetchAndLog: (url) ->
+		options = urllib.parse(url, true);
+		options.url = options
+		options.method = "GET"
+		options.headers =
+			"Authorization":	oauth.makeAuthorizationHeader(@state, options)
+
+		request options, (error, response, body) ->
+
+			if (!error)
+				console.log("HTTP #{response.statusCode}:")
+				console.log(body)
+			else
+				console.log error
+				process.exit(1)
+
 
 	run: () ->
 

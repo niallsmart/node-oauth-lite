@@ -10,13 +10,10 @@ state =
 	oauth_consumer_secret: "anonymous"
 
 form =
-	xoauth_displayname: "OAuth Lite"
-	scope: "http://www.google.com/calendar/feeds http://picasaweb.google.com/data"
+	xoauth_displayname: "node-oauth-lite"
+	scope: "http://www.google.com/calendar/feeds"
 
 class GoogleTest extends interactive.InteractiveTest
-
-	constructor: ->
-		super(endpoints, state, form)
 
 test = new GoogleTest
 test.run()

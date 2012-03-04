@@ -1,7 +1,6 @@
 interactive = require('./interactive')
 oauth = require('../../src/http')
 urllib = require('url')
-request = require('request')
 
 endpoints =
 	request: "http://api.netflix.com/oauth/request_token"
@@ -16,10 +15,9 @@ oauth.requireTLS = false
 
 class NetflixTest extends interactive.InteractiveTest
 
-	constructor: ->
-		super(endpoints, state)
-
 	makeAuthorizeUrl: (params) ->
+		# NetFlix's API requires clients to send the oauth_consumer_key
+		# when authorizing the request token.
 		url = urllib.parse(@endpoints.authorize, true)
 		url.query.oauth_token = params.oauth_token
 		url.query.oauth_consumer_key = @state.oauth_consumer_key
@@ -30,23 +28,9 @@ class NetflixTest extends interactive.InteractiveTest
 		@state.oauth_token = params.oauth_token
 		@state.oauth_token_secret = params.oauth_token_secret
 
-		options = "http://api.netflix.com/users/#{params.user_id}?output=json"
-		options = urllib.parse(options, true);
-		options.url = options
-		options.method = "GET"
-		options.headers =
-			"Authorization":	oauth.makeAuthorizationHeader(@state, options)
+		this.fetchAndLog "http://api.netflix.com/users/#{params.user_id}?output=json"
 
-		request options, (error, response, body) ->
-
-			if (!error)
-   				console.log("HTTP #{response.statusCode}:")
-   				console.log(body)
-			else
-				console.log error
-				process.exit(1)
-
-test = new NetflixTest
+test = new NetflixTest(endpoints, state)
 test.run()
 
 
