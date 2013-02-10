@@ -46,7 +46,7 @@ exports.testFetchRequestTokenBadProtocol = (test) ->
     oauth.fetchRequestToken state, "http://service.net/oauth/request", null
     test.ok false, "expected exception"
   catch e
-    test.equal e.message, "OAuthconnection requires https; http was specified"
+    test.equal e.message, "http not supported (try https, or set requireTLS=false)"
 
   test.done() 
 

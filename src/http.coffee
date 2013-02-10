@@ -32,7 +32,7 @@ fetchToken = (state, options, form, cb) ->
     protocols["http:"] = require('http')
 
   if !(protocol = protocols[options.protocol])
-    throw new Error("protocol not supported: '#{options.protocol.slice(0, -1)}' (try https, or set requireTLS=false)") 
+    throw new Error("#{options.protocol.slice(0, -1)} not supported (try https, or set requireTLS=false)") 
 
   if form?
     form = qslib.stringify(form) if typeof(form) == 'object'
