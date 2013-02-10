@@ -70,7 +70,7 @@ exports.InteractiveTest = class
 				oauth.fetchAccessToken @state, @endpoints.access, null, (err, params) =>
 
 					if err
-						console.error(err);
+						console.error(err.stack or err);
 						process.exit(1)
 									
 					@onSuccess(params)
