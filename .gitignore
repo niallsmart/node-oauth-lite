@@ -1,6 +1,7 @@
 Cakefile.js
 node_modules
 oauth-lite.sublime-workspace
+lib
 *.swp
 *.tgz
 *.log
