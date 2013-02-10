@@ -2,7 +2,7 @@
 	"folders":
 	[
 		{
-			"path": "/Users/niall/Dropbox/Projects/node-oauth-lite",
+			"path": ".",
 			"folder_exclude_patterns": ["node_modules", "lib"]
 		}
 	],
