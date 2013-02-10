@@ -1,8 +1,8 @@
 # Introduction
 
 
-node-oauth-lite is a lightweight OAuth 1.0a client library for Node.js. It's
-agnostic of HTTP client library, and supports Google's [XOAUTH mechanism]
+node-oauth-lite is a lightweight OAuth 1.0a client library for Node.js. It's designed
+for use with any HTTP client library, and supports Google's [XOAUTH mechanism]
 (https://developers.google.com/google-apps/gmail/oauth_protocol)
 for SMTP and IMAP authentication.
 
@@ -19,12 +19,12 @@ state =
 url = 'https://www.google.com/accounts/OAuthGetRequestToken'
 
 form =                                   # Additional request parameters specific to Google's API
-  xoauth_displayname: "node-oauth-lite"
-  scope: "https://www.googleapis.com/auth/userinfo#email"     
+  xoauth_displayname: 'node-oauth-lite'
+  scope: 'https://www.googleapis.com/auth/userinfo#email'     
 
 oauth.fetchRequestToken state, url, form, (err, params) ->
   # if the request was successful, the temporary request token
-  # is supplied as `params.oauth_token` and `params.oauth_token_secret`
+  # is supplied as params.oauth_token and params.oauth_token_secret
 
 ```
 
@@ -35,7 +35,7 @@ redirecting the user to an authorization page on the service provider specifying
 request token as a query parameter.
 
 If the user grants access, the service provider will provide a verification code (either via a
-confirmation page or HTTP callback to the client depending on the `oauth_callback` parameter above) and
+confirmation page or HTTP callback to the client, depending on the `oauth_callback` parameter above) and
 then the request token can then be exchanged for a permanent access token.
 
 ### Exchanging an authorized Request Token for an Access Token
@@ -52,14 +52,15 @@ url = 'https://www.google.com/accounts/OAuthGetAccessToken'
 
 oauth.fetchAccessToken state, access_url, null, (err, params) =>
   # if the request was successful, the permanent access token
-  # is supplied as `params.oauth_token` and `params.oauth_token_secret`
+  # is supplied as params.oauth_token and params.oauth_token_secret
 
 ```
 
 ### Using an Access Token
 
-The access token can now be used to make authorized requests to the service provider
-on behalf of the user:
+The access token can now be used to make authorized HTTP requests to the service provider
+on behalf of the user. Requests must include the Authenticate" header as generated
+by the `oauth.makeAuthorizationHeader` API.
 
 ```coffee
 urllib = require('url')
@@ -75,9 +76,9 @@ url = 'https://www.googleapis.com/userinfo/email'
 
 options = urllib.parse(url, true);
 options.url = options
-options.method = "GET"
+options.method = 'GET'
 options.headers =
-  "Authorization":	oauth.makeAuthorizationHeader(@state, options)
+  'Authorization':	oauth.makeAuthorizationHeader(@state, options)
 
   request options, (error, response, body) ->
     # user's email address should be in `body`
