@@ -42,7 +42,7 @@ exports.InteractiveTest = class
 		oauth.fetchRequestToken @state, options, @form, (err, params) =>
 
 			if err
-				console.error(err);
+				console.trace(err.stack or err);
 				process.exit(1)
 
 			for own k, v of params
