@@ -3,9 +3,9 @@ oauth = require('../../src/http')
 urllib = require('url')
 
 endpoints =
-	request: "http://api.netflix.com/oauth/request_token"
+	request: "http://api-public.netflix.com/oauth/request_token"
 	authorize: "https://api-user.netflix.com/oauth/login"
-	access: "http://api.netflix.com/oauth/access_token"
+	access: "http://api-public.netflix.com/oauth/access_token"
 
 state =
 	oauth_consumer_key: "dnejxnzaqed4q7635zdrjgch"
@@ -28,11 +28,7 @@ class NetflixTest extends interactive.InteractiveTest
 		@state.oauth_token = params.oauth_token
 		@state.oauth_token_secret = params.oauth_token_secret
 
-		this.fetchAndLog "http://api.netflix.com/users/#{params.user_id}?output=json"
+		this.fetchAndLog "http://api-public.netflix.com/users/#{params.user_id}?output=json"
 
 test = new NetflixTest(endpoints, state)
 test.run()
-
-
-
-
