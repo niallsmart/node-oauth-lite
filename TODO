@@ -1,5 +1,10 @@
-
+* Finish XOAUTH support
+* Example web-app
+* Remove oauth_ prefix from parameter names?
+* Should oauth_token be mandatory when calculating Authenticate header?
 * Documentation
+ - XOAUTH
+ - test the sample code
 * Add trace option to debug HTTP traffic
 * Test coverage:
  - Non-HTTP 200 response codes
@@ -15,6 +20,7 @@
  - Vimeo [done]
  - Yahoo [done]
  - StackOverflow
+ - LinkedIn
  - Yammer
  - Meetup
  - Dwolla
