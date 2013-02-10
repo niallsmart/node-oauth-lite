@@ -6,8 +6,8 @@ endpoints =
 	access: "https://api.login.yahoo.com/oauth/v2/get_token"
 
 state =
-	oauth_consumer_key: "dj0yJmk9YTRTdkV1V1pRcDlkJmQ9WVdrOWVrVmpOMU01TkdjbWNHbzlOakkyT1RZNE56WXkmcz1jb25zdW1lcnNlY3JldCZ4PWM5"
-	oauth_consumer_secret: "8448cc7caf1f564af9d7e31bf3c5058841c107c1"
+	oauth_consumer_key: "dj0yJmk9b2Iwc2EzVGZpcDV1JmQ9WVdrOWVrVmpOMU01TkdjbWNHbzlOakkyT1RZNE56WXkmcz1jb25zdW1lcnNlY3JldCZ4PTJi"
+	oauth_consumer_secret: "74f2ed34c3c34159d685946ce9adee83358c4faa"
 
 class YahooTest extends interactive.InteractiveTest
 
@@ -15,7 +15,7 @@ class YahooTest extends interactive.InteractiveTest
 		@state.oauth_token = params.oauth_token
 		@state.oauth_token_secret = params.oauth_token_secret
 
-		this.fetchAndLog "http://social.yahooapis.com/v1/user/#{params.xoauth_yahoo_guid}/profile/status?format=xml"
+		this.fetchAndLog "http://query.yahooapis.com/v1/yql?format=json&q=SELECT+*+FROM+social.profile+WHERE+guid=me"
 
 test = new YahooTest(endpoints, state)
 test.run()
