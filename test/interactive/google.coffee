@@ -11,10 +11,16 @@ state =
 
 form =
 	xoauth_displayname: "node-oauth-lite"
-	scope: "http://www.google.com/calendar/feeds"
+	scope: "https://www.googleapis.com/auth/userinfo#email"
 
 class GoogleTest extends interactive.InteractiveTest
 
-test = new GoogleTest
+	onSuccess: (params) ->
+		@state.oauth_token = params.oauth_token
+		@state.oauth_token_secret = params.oauth_token_secret
+
+		this.fetchAndLog "https://www.googleapis.com/userinfo/email"
+
+test = new GoogleTest(endpoints, state, form)
 test.run()
 
