@@ -1,5 +1,5 @@
 interactive = require('./interactive')
-oauth = require('../../src/http')
+oauth = require("oauth-lite")
 urllib = require('url')
 
 endpoints =

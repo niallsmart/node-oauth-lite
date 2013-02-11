@@ -1,4 +1,4 @@
-oauth = require("../../src/http")
+oauth = require("oauth-lite")
 urllib = require('url')
 request = require('request')
 
