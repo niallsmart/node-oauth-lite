@@ -11,10 +11,12 @@ for SMTP and IMAP authentication.
 ### Fetching a Request Token
 
 ```coffee
+oauth = require("oauth-lite")
+
 state =
-  oauth_consumer_key = 'anonymous'       # Google do not require pre-registration of OAuth clients
-  oauth_consumer_secret = 'anonymous'
-  oauth_callback = 'oob'                 # A web-app would usually provide the provider a callback URL instead.
+  oauth_consumer_key: 'anonymous'       # Google do not require pre-registration of OAuth clients
+  oauth_consumer_secret: 'anonymous'
+  oauth_callback: 'oob'                 # A web-app would usually provide the provider a callback URL instead.
 
 url = 'https://www.google.com/accounts/OAuthGetRequestToken'
 
@@ -42,15 +44,15 @@ then the request token can then be exchanged for a permanent access token.
 
 ```coffee
 state =
-  oauth_consumer_key = 'anonymous'
-  oauth_consumer_secret = 'anonymous'
-  oauth_token = '<AUTHORIZED-REQUEST-TOKEN>'
-  oauth_token_secret = '<AUTHORIZED-REQUEST-TOKEN-SECRET>'
-  oauth_verifier = '<VERIFICATION-CODE-FROM-CALLBACK>'
+  oauth_consumer_key: 'anonymous'
+  oauth_consumer_secret: 'anonymous'
+  oauth_token: '<AUTHORIZED-REQUEST-TOKEN>'
+  oauth_token_secret: '<AUTHORIZED-REQUEST-TOKEN-SECRET>'
+  oauth_verifier: '<VERIFICATION-CODE-FROM-CALLBACK>'
 
 url = 'https://www.google.com/accounts/OAuthGetAccessToken'
 
-oauth.fetchAccessToken state, access_url, null, (err, params) =>
+oauth.fetchAccessToken state, url, null, (err, params) =>
   # if the request was successful, the permanent access token
   # is supplied as params.oauth_token and params.oauth_token_secret
 
@@ -63,14 +65,15 @@ on behalf of the user. Requests must include the Authenticate" header as generat
 by the `oauth.makeAuthorizationHeader` API.
 
 ```coffee
+https = require('https')
 urllib = require('url')
-request = require('request')
+oauth = require('oauth-lite')
 
 state =
-  oauth_consumer_key = 'anonymous'
-  oauth_consumer_secret = 'anonymous'
-  oauth_token = '<USERS-ACCESS-TOKEN>'
-  oauth_token_secret = '<USERS-ACCESS-TOKEN-SECRET>'
+  oauth_consumer_key: 'anonymous'
+  oauth_consumer_secret: 'anonymous'
+  oauth_token: '<USERS-ACCESS-TOKEN>'
+  oauth_token_secret: '<USERS-ACCESS-TOKEN-SECRET>'
   
 url = 'https://www.googleapis.com/userinfo/email'
 
@@ -78,10 +81,11 @@ options = urllib.parse(url, true);
 options.url = options
 options.method = 'GET'
 options.headers =
-  'Authorization':	oauth.makeAuthorizationHeader(@state, options)
+  'Authorization': oauth.makeAuthorizationHeader(state, options)
 
-  request options, (error, response, body) ->
-    # user's email address should be in `body`
+https.get options, (response) ->
+  response.on 'data', (chunk) ->
+    console.log('DATA: ' + chunk)
 ```
 
 # XOAuth Support
