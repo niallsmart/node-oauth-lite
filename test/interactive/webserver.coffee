@@ -97,4 +97,4 @@ app.get "/*", (req, res) ->
 	res.send("<a href='/login'>login</a>")
 
 app.listen(config.port)
-console.log "Listening - open http://localhost:#{config.port}"
+console.log "Listening - now open http://localhost:#{config.port}"
