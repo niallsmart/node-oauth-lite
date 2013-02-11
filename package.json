@@ -12,7 +12,8 @@
     "devDependencies": {
         "coffee-script": ">=1.2.0",
         "nodeunit": ">=0.7.3",
-        "request": ">=2.9.152"
+        "request": ">=2.9.152",
+        "express": ">=3.0.0"
     },
     "directories": {
         "example": "example",
@@ -20,7 +21,7 @@
         "test": "test"
     },
     "engines": {
-        "node": ">=0.6.0"
+        "node": ">=0.8.0"
     },
     "files": [
 	"Cakefile",
