@@ -13,7 +13,9 @@
         "coffee-script": ">=1.2.0",
         "nodeunit": ">=0.7.3",
         "request": ">=2.9.152",
-        "express": ">=3.0.0"
+        "express": ">=3.0.0",
+        "imap": ">=0.7.7",
+        "source-map-support": ">=0.1.0"
     },
     "directories": {
         "example": "example",
