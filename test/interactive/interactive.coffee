@@ -8,13 +8,12 @@ exports.InteractiveTest = class
 		null
 
 	onSuccess: (params) ->
-		console.log("authenticated:", params)
+		console.log("authenticated: ", params)
 
 	makeAuthorizeUrl: (params) ->
 		url = urllib.parse(@endpoints.authorize, true)
 		url.query.oauth_token = params.oauth_token
 		urllib.format(url)
-
 
 	fetchAndLog: (url) ->
 		options = urllib.parse(url, true);
@@ -62,7 +61,7 @@ exports.InteractiveTest = class
 			process.stdin.resume()
 			process.stdin.setEncoding('utf8')
 
-			process.stdin.on 'data', (chunk) =>
+			process.stdin.once 'data', (chunk) =>
 				process.stdin.pause()
 				
 				@state.oauth_verifier = chunk.trim()
