@@ -14,7 +14,7 @@ exports.makeClientInitialResponse = (state, options) ->
   params = for k in keys
     eql(prim.encode(k), quote(prim.encode(params[k])))
 
-  b = new Buffer("GET #{urllib.format(options)} #{params.join(",")}")
+  b = new Buffer("#{options.method} #{urllib.format(options)} #{params.join(",")}")
   b.toString("base64")
 
 
