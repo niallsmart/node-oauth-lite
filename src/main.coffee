@@ -177,8 +177,6 @@ oauth.makeAuthorizationHeader = (state, options, form, realm) ->
   header += params.join(",")
   header
 
-console.log('bonzai')
-
 oauth.makeClientInitialResponse = (state, options) ->
 
   eql = (k, v) ->
