@@ -2,8 +2,8 @@
  - implement [DONE]
  - interactive test case [DONE]
  - docs
-* Organize source code properly (one file?)
-* Push to NPM
+* Organize source code properly [DONE]
+* Push to NPM [DONE]
 * Test coverage:
  - Non-HTTP 200 response codes
  - Invalid/incorrect server responses (e.g., missing parameters)
