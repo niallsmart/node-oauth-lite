@@ -90,7 +90,44 @@ https.get options, (response) ->
 
 # XOAuth Support
 
-TODO
+An access token can also be used to authenticate to SMTP and IMAP servers using Google's [XOAUTH mechanism]
+(https://developers.google.com/google-apps/gmail/oauth_protocol).
+
+```coffee
+urllib = require('url')
+oauth = require('oauth-lite')
+Imap = require('imap')
+
+state =
+  oauth_consumer_key: 'anonymous'
+  oauth_consumer_secret: 'anonymous'
+  oauth_token: '<USERS-ACCESS-TOKEN>'
+  oauth_token_secret: '<USERS-ACCESS-TOKEN-SECRET>'
+
+email = '<USERS-EMAIL>'
+url = "https://mail.google.com/mail/b/#{email}/imap/"
+
+options = urllib.parse(url)
+options.method = "GET"
+icr = oauth.makeClientInitialResponse(state, options)
+
+imap = new Imap(
+  xoauth: icr
+  host: 'imap.gmail.com',
+  port: 993,
+  secure: true
+)
+
+imap.connect (err) ->
+  if (err)
+    console.log("IMAP connect failed", err)
+    return
+  console.log("connected to IMAP server")
+  imap.openBox 'INBOX', true, (err, info) ->
+    if (!err)
+      console.log("#{info.messages.total} messages(s) in INBOX");
+    imap.logout();
+```
 
 # Reference
 
