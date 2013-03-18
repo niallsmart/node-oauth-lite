@@ -5,7 +5,7 @@
 events = require('events');
 urllib = require('url')
 qslib = require('querystring')
-prim = require('./prim')
+util = require('./util')
 oauth = exports
 
 exports.requireTLS = true
@@ -163,12 +163,12 @@ oauth.makeAuthorizationHeader = (state, options, form, realm) ->
   quote = (v) ->
     "\"#{v}\""
 
-  params = prim.makeOAuthParameters(state, options, form)
+  params = util.makeOAuthParameters(state, options, form)
   header = "OAuth "
 
   keys = (k for own k of params).sort()
   params = for k in keys
-    eql(prim.encode(k), quote(prim.encode(params[k])))
+    eql(util.encode(k), quote(util.encode(params[k])))
 
   if realm?
     realm = realm.replace /"/g, "\\\""
@@ -177,5 +177,20 @@ oauth.makeAuthorizationHeader = (state, options, form, realm) ->
   header += params.join(",")
   header
 
+console.log('bonzai')
 
+oauth.makeClientInitialResponse = (state, options) ->
 
+  eql = (k, v) ->
+    "#{k}=#{v}"
+
+  quote = (v) ->
+    "\"#{v}\""
+
+  params = util.makeOAuthParameters(state, options)
+  keys = (k for own k of params).sort()
+  params = for k in keys
+    eql(util.encode(k), quote(util.encode(params[k])))
+
+  b = new Buffer("#{options.method} #{urllib.format(options)} #{params.join(",")}")
+  b.toString("base64")

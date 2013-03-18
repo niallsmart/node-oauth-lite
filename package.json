@@ -1,14 +1,18 @@
 {
     "version": "0.1.0",
-    "description": "Lightweight OAuth 1.0a client",
+    "description": "Lightweight OAuth 1.0a client library",
     "name": "oauth-lite",
-    "main": "lib/http.js",
-
     "author": {
         "email": "niall@pobox.com",
         "name": "Niall Smart",
         "url": "http://niallsmart.com"
     },
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/niallsmart/node-oauth-lite.git"
+    },
+    "main": "lib/main.js",
     "devDependencies": {
         "coffee-script": ">=1.2.0",
         "nodeunit": ">=0.7.3",
@@ -26,7 +30,7 @@
         "node": ">=0.8.0"
     },
     "files": [
-	"Cakefile",
+        "Cakefile",
         "src",
         "lib",
         "test"
@@ -35,11 +39,6 @@
         "oauth",
         "client"
     ],
-    "license": "MIT",
-    "repository": {
-        "type": "git",
-        "url": "git://github.com/niallsmart/node-oauth-lite.git"
-    },
     "scripts": {
         "test": "cake test"
     }

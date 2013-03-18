@@ -1,18 +1,18 @@
 #
-# OAuth primitives.
+# OAuth utilitives.
 #
 
 urllib = require('url')
 qslib = require('querystring')
 crypto = require('crypto')
-prim = exports
+util = exports
 
-prim.defaultPorts = {
+util.defaultPorts = {
   "http:":   80,
   "https:":  443
 }
 
-prim.defaultNonceBytes = 32
+util.defaultNonceBytes = 32
 
 #
 # Creates an OAuth signature base string for a HTTP request.
@@ -21,35 +21,35 @@ prim.defaultNonceBytes = 32
 # @param url request URL including protocol, hostname, path and query string parameters (as string or object) 
 # @param form HTTP body form data (as "application/x-www-form-urlencoded" string or object) (optional)
 #
-prim.makeSignatureBaseString = (oauth, request, form) ->
+util.makeSignatureBaseString = (oauth, request, form) ->
 
   form = qslib.parse(form) if typeof(form) == 'string'
 
-  [prim.makeSignatureMethod(request.method),
-    prim.makeSignatureURL(request),
-    prim.makeSignatureParameters(oauth, request.query, form)].join("&")
+  [util.makeSignatureMethod(request.method),
+    util.makeSignatureURL(request),
+    util.makeSignatureParameters(oauth, request.query, form)].join("&")
 
 
-prim.makeSignatureMethod = (method) ->
-  prim.encode(method.toUpperCase())
+util.makeSignatureMethod = (method) ->
+  util.encode(method.toUpperCase())
 
 
-prim.makeSignatureURL = (request) ->
+util.makeSignatureURL = (request) ->
   scheme = request.protocol.toLowerCase()
   hostname = request.hostname.toLowerCase()
-  port = if !request.port || parseInt(request.port, 10) == prim.defaultPorts[scheme] then "" else ":#{request.port}"
+  port = if !request.port || parseInt(request.port, 10) == util.defaultPorts[scheme] then "" else ":#{request.port}"
   pathname = request.pathname || "/"
-  prim.encode("#{scheme}//#{hostname}#{port}#{pathname}")
+  util.encode("#{scheme}//#{hostname}#{port}#{pathname}")
 
 
-prim.makeSignatureParameters = (oauth, queryString, form) ->
+util.makeSignatureParameters = (oauth, queryString, form) ->
   params = []
 
   collect = (obj) ->
     for own k, vs of obj
       vs = [vs] unless vs instanceof Array
       for v in vs
-        params.push({key: prim.encode(k), value: prim.encode(v)})
+        params.push({key: util.encode(k), value: util.encode(v)})
 
   collect(oauth)
   collect(queryString)
@@ -62,10 +62,10 @@ prim.makeSignatureParameters = (oauth, queryString, form) ->
   params = params.map (kv) ->
     "#{kv.key}=#{kv.value}"
 
-  prim.encode(params.join("&"))
+  util.encode(params.join("&"))
 
 
-prim.encode = (str) ->
+util.encode = (str) ->
   ret = encodeURIComponent(str)
   ret = ret.replace(/!/g, '%21')
   ret = ret.replace(/'/g, '%27')
@@ -75,33 +75,33 @@ prim.encode = (str) ->
   ret
 
 
-prim.makeNonce = (bytes) ->
-  crypto.randomBytes(bytes || prim.defaultNonceBytes).toString('hex')
+util.makeNonce = (bytes) ->
+  crypto.randomBytes(bytes || util.defaultNonceBytes).toString('hex')
 
 
-prim.makeTimestamp = ->
+util.makeTimestamp = ->
   Math.floor(Date.now() / 1000).toString()
 
 
-prim.signHmac = (clientSecret, tokenSecret, oauth, request, form) ->
-  key = [prim.encode(clientSecret), prim.encode(tokenSecret || "")].join("&")
-  sbs = prim.makeSignatureBaseString(oauth, request, form)
+util.signHmac = (clientSecret, tokenSecret, oauth, request, form) ->
+  key = [util.encode(clientSecret), util.encode(tokenSecret || "")].join("&")
+  sbs = util.makeSignatureBaseString(oauth, request, form)
   hmac = crypto.createHmac("sha1", key)
   hmac.update(sbs)
   hmac.digest("base64")
 
 
-prim.makeOAuthParameters = (state, request, form) ->
+util.makeOAuthParameters = (state, request, form) ->
   oauth = {}
   oauth.oauth_consumer_key = state.oauth_consumer_key
   oauth.oauth_token = state.oauth_token if state.oauth_token?
   oauth.oauth_verifier = state.oauth_verifier if state.oauth_verifier?
   oauth.oauth_callback = state.oauth_callback if state.oauth_callback?
-  oauth.oauth_nonce = state.oauth_nonce || prim.makeNonce()
-  oauth.oauth_timestamp = state.oauth_timestamp || prim.makeTimestamp()
+  oauth.oauth_nonce = state.oauth_nonce || util.makeNonce()
+  oauth.oauth_timestamp = state.oauth_timestamp || util.makeTimestamp()
   oauth.oauth_version = "1.0"
   oauth.oauth_signature_method = "HMAC-SHA1"
-  oauth.oauth_signature = prim.signHmac(
+  oauth.oauth_signature = util.signHmac(
       state.oauth_consumer_secret,
       state.oauth_token_secret,
       oauth,

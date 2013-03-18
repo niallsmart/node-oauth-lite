@@ -1,5 +1,5 @@
-oauth = require('../src/http')
-prim = require('../src/prim')
+oauth = require('../src/main')
+util = require('../src/util')
 urllib = require('url')
 fslib = require('fs');
 qslib = require('querystring');
@@ -154,8 +154,8 @@ exports.testWithMockServer = (test) ->
     oauth_consumer_key: "QAFNTS138L"
     oauth_consumer_secret: "TOMII7Q9E6"
     oauth_callback: "http://client.com/oauth/callback"
-    oauth_nonce: prim.makeNonce()
-    oauth_timestamp: prim.makeTimestamp()
+    oauth_nonce: util.makeNonce()
+    oauth_timestamp: util.makeTimestamp()
 
   options = urllib.parse("https://localhost:#{mock.port}#{mock.request.url}", true)
   options.method = "POST"

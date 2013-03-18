@@ -1,4 +1,4 @@
-oa = require('../src/prim')
+util = require('../src/util')
 
 urllib = require('url')
 assert = require('nodeunit/lib/assert')
@@ -8,30 +8,30 @@ assert = require('nodeunit/lib/assert')
 #
 
 exports.testMakeSignatureMethod = (test) ->
-  test.equal oa.makeSignatureMethod("Get"), "GET"
-  test.equal oa.makeSignatureMethod("Zom/Bo"), "ZOM%2FBO"
+  test.equal util.makeSignatureMethod("Get"), "GET"
+  test.equal util.makeSignatureMethod("Zom/Bo"), "ZOM%2FBO"
   test.done()
 
 exports.testMakeSignatureURL = (test) ->
   
   test.signatureURLEqual = (url, expected) ->
-    test.equal oa.makeSignatureURL(urllib.parse(url)), expected
+    test.equal util.makeSignatureURL(urllib.parse(url)), expected
 
-  test.signatureURLEqual "HtTp://LocalHost", oa.encode("http://localhost/")
-  test.signatureURLEqual "HtTp://LocalHost:80", oa.encode("http://localhost/")
-  test.signatureURLEqual "HtTp://LocalHost:080", oa.encode("http://localhost/")
-  test.signatureURLEqual "HtTp://LocalHost:8080", oa.encode("http://localhost:8080/")
-  test.signatureURLEqual "HtTps://LocalHost", oa.encode("https://localhost/")
-  test.signatureURLEqual "HtTps://LocalHost:443", oa.encode("https://localhost/")
-  test.signatureURLEqual "HtTps://LocalHost:8443", oa.encode("https://localhost:8443/")
-  test.signatureURLEqual "HtTp://LocalHost:80/some/path?q=search#fragment", oa.encode("http://localhost/some/path")
-  test.signatureURLEqual "HtTp://LocalHost:80/some/path/", oa.encode("http://localhost/some/path/")
+  test.signatureURLEqual "HtTp://LocalHost", util.encode("http://localhost/")
+  test.signatureURLEqual "HtTp://LocalHost:80", util.encode("http://localhost/")
+  test.signatureURLEqual "HtTp://LocalHost:080", util.encode("http://localhost/")
+  test.signatureURLEqual "HtTp://LocalHost:8080", util.encode("http://localhost:8080/")
+  test.signatureURLEqual "HtTps://LocalHost", util.encode("https://localhost/")
+  test.signatureURLEqual "HtTps://LocalHost:443", util.encode("https://localhost/")
+  test.signatureURLEqual "HtTps://LocalHost:8443", util.encode("https://localhost:8443/")
+  test.signatureURLEqual "HtTp://LocalHost:80/some/path?q=search#fragment", util.encode("http://localhost/some/path")
+  test.signatureURLEqual "HtTp://LocalHost:80/some/path/", util.encode("http://localhost/some/path/")
   test.done()
 
 exports.testEncode = (test) ->
 
   test.encodeEqual = (str, expected) ->
-    test.equal oa.encode(str), expected
+    test.equal util.encode(str), expected
 
   # unescaped
   test.encodeEqual "-._~-._~", "-._~-._~"
@@ -51,11 +51,11 @@ exports.testMakeSignatureParameters = (test) ->
   test.signatureParametersEqual = (args, expected) ->
 
     if typeof(expected) != 'string'
-      expected = oa.encode(expected.reduce( (all, pair) ->
-        all.concat(pair.map(oa.encode).join("="))
+      expected = util.encode(expected.reduce( (all, pair) ->
+        all.concat(pair.map(util.encode).join("="))
       , []).join("&"))
 
-    test.equal oa.makeSignatureParameters.apply(null, args), expected
+    test.equal util.makeSignatureParameters.apply(null, args), expected
 
   params = [{
     "foo": 12,
@@ -98,7 +98,7 @@ exports.testMakeSignatureParameters = (test) ->
     "a3": "2 q"
   }]
 
-  expected = oa.encode("a2=r%20b&a3=2%20q&a3=a&b5=%3D%253D&c%40=&c2=&oauth_consumer_key=9dj" +
+  expected = util.encode("a2=r%20b&a3=2%20q&a3=a&b5=%3D%253D&c%40=&c2=&oauth_consumer_key=9dj" +
                        "dj82h48djs9d2&oauth_nonce=7d8f3e4a&oauth_signature_method=HMAC-SHA1" +
                        "&oauth_timestamp=137131201&oauth_token=kkk9d7dh3k39sjv7")
 
@@ -119,7 +119,7 @@ exports.testMakeSignatureBaseString = (test) ->
     oauth_nonce: "7d8f3e4a"
   }
 
-  sig = oa.makeSignatureBaseString oauth, request, form
+  sig = util.makeSignatureBaseString oauth, request, form
 
   expected = 'POST&http%3A%2F%2Fexample.com%2Frequest&a2%3Dr%2520b%26a3%3D2%2520q' +
    '%26a3%3Da%26b5%3D%253D%25253D%26c%2540%3D%26c2%3D%26oauth_consumer_' +
@@ -137,19 +137,19 @@ exports.testMakeSignatureBaseString = (test) ->
 #   echo -n zombo | openssl dgst -sha1 -hmac "%3D&%2F" -binary | base64
 #
 #exports.testSignHMac = (test) ->
-#  sig = oa.signHmac "hello", null, "zombo"
+#  sig = util.signHmac "hello", null, "zombo"
 #  test.equal sig, "4Q7qDUw/kAsUfTuFuuf5JV9DP6w="
-#  sig = oa.signHmac "=", "/ ", "zombo"
+#  sig = util.signHmac "=", "/ ", "zombo"
 #  test.equal sig, "R5c2ZCw6WAoxO8lOYDpVJ3gZsVE="
 #  test.done()
 
 
 exports.testMakeNonce = (test) ->
-  test.equal oa.defaultNonceBytes, 32
-  test.ok oa.makeNonce().match(/^[0-9a-zA-Z]{64}$/)
-  oa.defaultNonceBytes = 64
-  test.ok oa.makeNonce().match(/^[0-9a-zA-Z]{128}$/)
-  test.ok oa.makeNonce(4).match(/^[0-9a-zA-Z]{8}$/)
+  test.equal util.defaultNonceBytes, 32
+  test.ok util.makeNonce().match(/^[0-9a-zA-Z]{64}$/)
+  util.defaultNonceBytes = 64
+  test.ok util.makeNonce().match(/^[0-9a-zA-Z]{128}$/)
+  test.ok util.makeNonce(4).match(/^[0-9a-zA-Z]{8}$/)
   test.done()
 
 
@@ -159,7 +159,7 @@ exports.testMakeNonce = (test) ->
 exports.testMakeOAuthParameters = (test) ->
 
   test.assertOAuthParameters = (state, request, expected) ->
-    params = oa.makeOAuthParameters state, request
+    params = util.makeOAuthParameters state, request
 
     expected.oauth_signature_method = "HMAC-SHA1"
     expected.oauth_version = "1.0"

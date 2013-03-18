@@ -1,4 +1,4 @@
-sasl = require("../src/sasl")
+oauth = require("../src/main")
 urllib = require("url")
 assert = require("nodeunit/lib/assert")
 
@@ -14,7 +14,7 @@ exports.testMakeAuthorizationHeader = (test) ->
   options = urllib.parse("https://mail.google.com/mail/b/someone@example.com/imap/", true)
   options.method = "GET"
 
-  icr = sasl.makeClientInitialResponse state, options
+  icr = oauth.makeClientInitialResponse state, options
   test.equal icr, """
     R0VUIGh0dHBzOi8vbWFpbC5nb29nbGUuY29tL21haWwvYi9zb21lb25lQGV4YW1wbGUuY29tL2ltYXAvIG9hdXRoX2NvbnN1bWVyX2tleT0ib3JhbmdlcyIsb2F1dGhfbm9uY2U9IjE2OTU4MDk3Mzk4ODg3ODIwMzUiLG9hdXRoX3NpZ25hdHVyZT0iM0RNSVhabEpob3U3Qm1pUFdob0YwNU5TYURJJTNEIixvYXV0aF9zaWduYXR1cmVfbWV0aG9kPSJITUFDLVNIQTEiLG9hdXRoX3RpbWVzdGFtcD0iMTM2MDkwNDQ1MSIsb2F1dGhfdG9rZW49ImFwcGxlcyIsb2F1dGhfdmVyc2lvbj0iMS4wIg==
   """.replace(/\s+/g, "")

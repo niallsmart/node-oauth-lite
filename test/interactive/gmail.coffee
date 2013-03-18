@@ -1,5 +1,5 @@
 interactive = require('./interactive')
-sasl = require('../../src/sasl')
+oauth = require("oauth-lite")
 Imap = require('imap')
 urllib = require('url')
 
@@ -28,7 +28,7 @@ class GmailTest extends interactive.InteractiveTest
 		options = "https://mail.google.com/mail/b/#{@email}/imap/"
 		options = urllib.parse(options)
 		options.method = "GET"
-		icr = sasl.makeClientInitialResponse(state, options)
+		icr = oauth.makeClientInitialResponse(state, options)
 
 		imap = new Imap(
 			xoauth: icr
