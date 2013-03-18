@@ -8,5 +8,6 @@ task 'compile', 'compile CoffeeScript sources', () ->
 	console.log "compiled"
 
 task 'test', () ->
+	invoke 'compile'
 	exec 'nodeunit --reporter eclipse test/*-test.*', (err, stdout, stderr) ->
 	    console.log stdout + stderr
