@@ -35,6 +35,35 @@ exports.testMakeAuthorizationHeader = (test) ->
   test.done()
 
 
+exports.testMakeAuthorizationHeaderWithoutParsingQueryString = (test) ->
+  state =
+    oauth_consumer_key: "0b2eb1469"
+    oauth_consumer_secret: "b0cae9f3b7"
+    oauth_callback: "oob"
+    oauth_nonce: "d1fdf5bd8d4"
+    oauth_timestamp: "1329806281"
+
+  options = urllib.parse("https://api.twitter.com/oauth/request_token?foo=bar")
+  options.method = "POST"
+
+  header = oauth.makeAuthorizationHeader state, options
+  test.equal header, 'OAuth oauth_callback="oob",oauth_consumer_key="0b2eb1469",oauth_nonce="d1fdf5bd8d4",' +
+                      'oauth_signature="erdbNVCT%2FVbdzY4Q3xOuJxFoBt4%3D",oauth_signature_method="HMAC-SHA1",' +
+                      'oauth_timestamp="1329806281",oauth_version="1.0"'
+
+  header = oauth.makeAuthorizationHeader state, options, null, 'Admin "A"!'
+  test.equals header, 'OAuth realm="Admin \\"A\\"!",oauth_callback="oob",oauth_consumer_key="0b2eb1469",oauth_nonce="d1fdf5bd8d4",' +
+                      'oauth_signature="erdbNVCT%2FVbdzY4Q3xOuJxFoBt4%3D",oauth_signature_method="HMAC-SHA1",' +
+                      'oauth_timestamp="1329806281",oauth_version="1.0"'
+
+  header = oauth.makeAuthorizationHeader state, options, null, ''
+  test.equal header, 'OAuth realm="",oauth_callback="oob",oauth_consumer_key="0b2eb1469",oauth_nonce="d1fdf5bd8d4",' +
+                      'oauth_signature="erdbNVCT%2FVbdzY4Q3xOuJxFoBt4%3D",oauth_signature_method="HMAC-SHA1",' +
+                      'oauth_timestamp="1329806281",oauth_version="1.0"'
+
+  test.done()
+
+
 exports.testFetchRequestTokenBadProtocol = (test) ->
 
   state = 
