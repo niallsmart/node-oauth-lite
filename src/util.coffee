@@ -43,6 +43,7 @@ util.makeSignatureURL = (request) ->
 
 
 util.makeSignatureParameters = (oauth, queryString, form) ->
+  queryString = qslib.parse(queryString) if typeof(queryString) == 'string'
   params = []
 
   collect = (obj) ->
