@@ -1,7 +1,6 @@
 util = require('../src/util')
 
 urllib = require('url')
-assert = require('nodeunit/lib/assert')
 
 #
 # TODO: unwrap escaping in test cases for legibility.

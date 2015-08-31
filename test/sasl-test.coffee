@@ -1,6 +1,5 @@
 oauth = require("../src/main")
 urllib = require("url")
-assert = require("nodeunit/lib/assert")
 
 exports.testMakeAuthorizationHeader = (test) ->
   state =

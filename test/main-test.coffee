@@ -3,8 +3,7 @@ util = require('../src/util')
 urllib = require('url')
 fslib = require('fs');
 qslib = require('querystring');
-assert = require('nodeunit/lib/assert')
-https = require('https');
+https = require('https')
 
 exports.testMakeAuthorizationHeader = (test) ->
   state =
@@ -217,9 +216,4 @@ exports.testWithMockServer = (test) ->
         test.equal params.oauth_token_secret, mock.access.response.oauth_token_secret
         server.close()
         test.done()
-
-
-
-
-
 
